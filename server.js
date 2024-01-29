@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
 require("dotenv").config();
 
 const app = express();
@@ -10,10 +11,10 @@ const port = 3000;
 
 mongoose.connect(
   process.env.DB_HOST,
-  {
-    useNewUrlParser: true,
-  }
-);
+).then(() => console.log('DB Connected!'))
+.catch(err => {
+  console.log(`DB Connection Error: ${err.message}`);
+});
 
 app.get('/', (req, res)=>{ 
   res.status(200); 
