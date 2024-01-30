@@ -1,31 +1,30 @@
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
-require("dotenv").config();
+ const DbConnection= require('./config/db.js');// pulling conn file
+
+const creating = require('./routes/courseRoute.js'); //calling create course router
+const Createmodules = require('./routes/moduleRoute.js')
+require('dotenv').config(); // Load environment variables from .env file and the root (optional behind the scene)
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const port = 3000;
-
-mongoose.connect(
-  process.env.DB_HOST,
-).then(() => console.log('DB Connected!'))
-.catch(err => {
-  console.log(`DB Connection Error: ${err.message}`);
-});
+app.use('/api/v1' , creating); // mounting the middleware function creating at the specified api path "/api/v1"
+app.use('/api/v1' ,  Createmodules)
 
 app.get('/', (req, res)=>{ 
   res.status(200); 
   res.send("Welcome to root URL of Server"); 
 });
 
-app.listen(port, (error) =>{ 
+app.listen(process.env.port, (error) =>{ 
+
+  DbConnection(); // extracted the mongoose connection into the config folder and called the function 
+
   if(!error) 
-      console.log("Server is Successfully Running, " +
-                  "and App is listening on port "+ port); 
+    console.log("Server is Successfully Running, " + "and App is listening on port "+ process.env.port); 
   else 
-      console.log("Error occurred, server can't start", error); 
+    console.log("Error occurred, server can't start", error); 
   } 
 ); 
