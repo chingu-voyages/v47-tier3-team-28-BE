@@ -1,12 +1,14 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
+const { Schema } = mongoose;
+const UserModel = require("./userModel");
 
-const studentSchema = new mongoose.Schema(
+const studentSchema = new Schema(
 	{
-
+		major: { type: String },
 	},
 	{ collection: 'student' }
 )
 
-const StudentModel = mongoose.model('Student', studentSchema);
+const StudentModel = UserModel.discriminator('Student', studentSchema);
 
 module.exports = StudentModel;

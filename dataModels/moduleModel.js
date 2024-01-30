@@ -1,12 +1,13 @@
-const mongoose = require('mongoose');
+// import mongoose from "mongoose";
+// const { Schema } = mongoose;
 
-const moduleSchema = new mongoose.Schema(
-	{
+// const moduleSchema = new Schema(
+// 	{
 
-	},
-	{ collection: 'module' }
-)
+// 	},
+// 	{ collection: 'module' }
+// )
 
-const ModuleModel = mongoose.model('Module', moduleSchema);
+// const ModuleModel = mongoose.model('Module', moduleSchema);
 
-module.exports = ModuleModel;
+// module.exports = ModuleModel;

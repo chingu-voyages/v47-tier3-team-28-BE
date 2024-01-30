@@ -1,12 +1,14 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
+const { Schema } = mongoose;
+const UserModel = require("./userModel");
 
-const adminSchema = new mongoose.Schema(
+const adminSchema = new Schema(
 	{
 
 	},
 	{ collection: 'admin' }
 )
 
-const AdminModel = mongoose.model('Admin', adminSchema);
+const AdminModel = UserModel.discriminator('Admin', adminSchema);
 
 module.exports = AdminModel;
