@@ -1,26 +1,32 @@
-const User = require('../models/userModel')
+const UserModel = require('../models/userModel')
+const InstructorModel = require('../models/instructorModel');
+const studentModel = require('../models/studentModel')
 const generateToken = require('../utils/generateTokens');
+
 
 //@desc   signup new user instructor
 //@route  POST /api/register/instructor
 //@access Public
 const signupInstructor = async (req, res) => {
-    const { firstName, lastName, dob, email, password } = req.body;
+    const { firstName, lastName, dob, email, password, bio, specialization, years_of_experience } = req.body;
 
-    const userExist = await User.findOne({ email });
+    const userExist = await UserModel.findOne({ email });
     if (userExist) {
         res.status(400);
         throw new Error('User already exists');
     }
-
-    const instructor = await User.create({
+    const instructor = new InstructorModel({
         firstName,
         lastName,
         dob,
         email,
         password,
-        type: 'instructor',
+        bio,
+        specialization,
+        years_of_experience,
+        role: 'instructor',
     });
+    await instructor.save();
     if (instructor) {
         res.status(201).json({
             message: 'Instructor registration successful',
@@ -29,7 +35,11 @@ const signupInstructor = async (req, res) => {
             lastName: instructor.lastName,
             email: instructor.email,
             dob: instructor.dob,
-            type: instructor.type,
+            role: instructor.role,
+            bio: instructor.bio,
+            specialization: instructor.specialization,
+            years_of_experience: instructor.years_of_experience,
+            role: 'instructor',
             token: generateToken(instructor._id),
         });
     } else {
@@ -44,22 +54,25 @@ const signupInstructor = async (req, res) => {
 //@route  POST /api/register/student
 //@access Public
 const signupStudent = async (req, res) => {
-    const { firstName, lastName, dob, email, password } = req.body;
+    const { firstName, lastName, dob, email, password, major } = req.body;
 
-    const userExist = await User.findOne({ email });
+    const userExist = await UserModel.findOne({ email });
     if (userExist) {
         res.status(400);
         throw new Error('User already exists');
     }
 
-    const student = await User.create({
+    const student = new studentModel({
         firstName,
         lastName,
         dob,
         email,
         password,
-        type: 'student',
+        major,
+        role: 'student',
+
     });
+    await student.save();
     if (student) {
         res.status(201).json({
             message: 'student registration successful',
@@ -68,7 +81,7 @@ const signupStudent = async (req, res) => {
             lastName: student.lastName,
             dob: student.email,
             email: student.email,
-            type: student.type,
+            role: student.role,
             token: generateToken(student._id),
         });
     } else {
@@ -87,14 +100,14 @@ const signupStudent = async (req, res) => {
 // @access   Public
 const login = async (req, res) => {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await UserModel.findOne({ email });
     if (user && (await user.matchPassword(password))) {
         res.json({
             _id: user._id,
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            type: user.type,
+            role: user.role,
             token: generateToken(user._id),
         });
     } else {
@@ -102,5 +115,7 @@ const login = async (req, res) => {
         throw new Error('Invalid username or password');
     }
 };
+
+
 
 module.exports = { signupStudent, signupInstructor, login };

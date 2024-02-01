@@ -1,6 +1,6 @@
 
 const jwt = require('jsonwebtoken');
-const User = require('../models/userModel')
+const UserModel = require('../models/userModel')
 
 const protect = async (req, res, next) => {
     let token;
@@ -13,7 +13,7 @@ const protect = async (req, res, next) => {
             token = req.headers.authorization.split(' ')[1];
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-            req.user = await User.findById(decoded.id).select('-password');
+            req.user = await UserModel.findById(decoded.id).select('-password');
 
             next();
         } catch (err) {
@@ -31,28 +31,28 @@ const protect = async (req, res, next) => {
 
 //instructor middleware
 const instructor = (req, res, next) => {
-    if (req.user && req.user.type === 'instructor') {
+    if (req.user && req.user.role === 'instructor') {
         next();
     } else {
-        return res.status(401).json({ message: 'Not authorized as a instructor ' });
+        return res.status(401).json({ message: 'Not authorized as you are not an instructor ' });
     }
 }
 
 //student
 const student = (req, res, next) => {
-    if (req.user && req.user.type === 'student') {
+    if (req.user && req.user.role === 'student') {
         next();
     } else {
-        return res.status(403).json({ message: 'Not authorized as a student' });
+        return res.status(403).json({ message: 'Not authorized as you are not student' });
     }
 }
 
 //admin
 const admin = (req, res, next) => {
-    if (req.user && req.user.type === 'student') {
+    if (req.user && req.user.role === 'admin') {
         next();
     } else {
-        return res.status(403).json({ message: 'Not authorized as an admin' })
+        return res.status(403).json({ message: 'Not authorized as you are not admin' })
     }
 };
 module.exports = { protect, instructor, student, admin };
