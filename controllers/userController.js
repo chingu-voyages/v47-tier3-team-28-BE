@@ -44,7 +44,6 @@ const signupInstructor = async (req, res) => {
             profilePhoto: instructor.profilePhoto,
             email: instructor.email,
             dob: instructor.dob,
-            role: instructor.role,
             bio: instructor.bio,
             specialization: instructor.specialization,
             years_of_experience: instructor.years_of_experience,
