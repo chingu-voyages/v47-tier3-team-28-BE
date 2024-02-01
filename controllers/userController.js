@@ -4,11 +4,18 @@ const studentModel = require('../models/studentModel')
 const generateToken = require('../utils/generateTokens');
 
 
+
+const Role = {
+    Instructor: 'instructor',
+    Student: 'student',
+    Admin: 'admin'
+}
+
 //@desc   signup new user instructor
 //@route  POST /api/register/instructor
 //@access Public
 const signupInstructor = async (req, res) => {
-    const { firstName, lastName, dob, email, password, bio, specialization, years_of_experience } = req.body;
+    const { firstName, lastName, profilePhoto, dob, email, password, bio, specialization, years_of_experience } = req.body;
 
     const userExist = await UserModel.findOne({ email });
     if (userExist) {
@@ -18,13 +25,14 @@ const signupInstructor = async (req, res) => {
     const instructor = new InstructorModel({
         firstName,
         lastName,
+        profilePhoto,
         dob,
         email,
         password,
         bio,
         specialization,
         years_of_experience,
-        role: 'instructor',
+        role: Role.Instructor,
     });
     await instructor.save();
     if (instructor) {
@@ -33,13 +41,14 @@ const signupInstructor = async (req, res) => {
             _id: instructor._id,
             firstName: instructor.firstName,
             lastName: instructor.lastName,
+            profilePhoto: instructor.profilePhoto,
             email: instructor.email,
             dob: instructor.dob,
             role: instructor.role,
             bio: instructor.bio,
             specialization: instructor.specialization,
             years_of_experience: instructor.years_of_experience,
-            role: 'instructor',
+            role: Role.Instructor,
             token: generateToken(instructor._id),
         });
     } else {
@@ -54,7 +63,7 @@ const signupInstructor = async (req, res) => {
 //@route  POST /api/register/student
 //@access Public
 const signupStudent = async (req, res) => {
-    const { firstName, lastName, dob, email, password, major } = req.body;
+    const { firstName, profilePhoto, lastName, dob, email, password, major } = req.body;
 
     const userExist = await UserModel.findOne({ email });
     if (userExist) {
@@ -65,11 +74,12 @@ const signupStudent = async (req, res) => {
     const student = new studentModel({
         firstName,
         lastName,
+        profilePhoto,
         dob,
         email,
         password,
         major,
-        role: 'student',
+        role: Role.Student,
 
     });
     await student.save();
@@ -79,9 +89,11 @@ const signupStudent = async (req, res) => {
             _id: student._id,
             firstName: student.firstName,
             lastName: student.lastName,
+            profilePhoto: student.profilePhoto,
+            major: student.major,
             dob: student.email,
             email: student.email,
-            role: student.role,
+            role: Role.Student,
             token: generateToken(student._id),
         });
     } else {
