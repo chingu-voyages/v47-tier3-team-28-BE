@@ -11,7 +11,8 @@ const userSchema = new Schema(
 		email: { type: String, required: true, unique: true },
 		password: { type: String, required: true, minlength: 8 },
 		profilePhoto: { type: Buffer },
-		role: { type: String, enum: ['student', 'instructor', 'admin'], required: true }
+		role: { type: String, enum: ['student', 'instructor', 'admin'], required: true },
+		isActive: { type: Boolean, default: true },
 	},
 	{ collection: 'user' }
 );
