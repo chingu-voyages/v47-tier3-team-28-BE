@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const creating = require('./routes/courseRoute.js'); //calling create course router
 const Createmodules = require('./routes/moduleRoute.js')
+const courseEnrollmentRoute = require('./routes/courseEnrollmentRoute.js');
 require('dotenv').config(); // Load environment variables from .env file and the root (optional behind the scene)
 
 const app = express();
@@ -12,6 +13,9 @@ app.use(express.json());
 
 app.use('/api/v1' , creating); // mounting the middleware function creating at the specified api path "/api/v1"
 app.use('/api/v1' ,  Createmodules)
+
+// Group of Course Enrollment API's
+app.use('/api/v1/enrollment', courseEnrollmentRoute);
 
 app.get('/', (req, res)=>{ 
   res.status(200); 
