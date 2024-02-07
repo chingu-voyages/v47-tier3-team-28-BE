@@ -22,7 +22,7 @@ app.use('/api/v1', authRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/admin', adminRoutes);
 
-// Group of Course Enrollment API's
+// Course Enrollment
 app.use('/api/v1/enrollment', courseEnrollmentRoute);
 
 
