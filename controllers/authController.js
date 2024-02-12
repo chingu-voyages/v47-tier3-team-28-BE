@@ -2,12 +2,12 @@ const UserModel = require('../models/userModel')
 const InstructorModel = require('../models/instructorModel');
 const studentModel = require('../models/studentModel')
 const generateToken = require('../utils/generateTokens');
-const Role = require = ('../middleware/role')
-
+const Role = require('../middleware/role');
+const asyncHandler = require('express-async-handler')
 //@desc   signup new user instructor
 //@route  POST /api/register/instructor
 //@access Public
-const signupInstructor = async (req, res) => {
+const signupInstructor = asyncHandler(async (req, res) => {
     const { firstName, lastName, profilePhoto, dob, email, password, bio, specialization, years_of_experience } = req.body;
 
     const userExist = await UserModel.findOne({ email });
@@ -47,14 +47,14 @@ const signupInstructor = async (req, res) => {
         res.status(400);
         throw new Error('Invalid user data');
     }
-};
+});
 
 
 
 //@desc   signup new user student
 //@route  POST /api/register/student
 //@access Public
-const signupStudent = async (req, res) => {
+const signupStudent = asyncHandler(async (req, res) => {
     const { firstName, profilePhoto, lastName, dob, email, password, major } = req.body;
 
     const userExist = await UserModel.findOne({ email });
@@ -92,7 +92,7 @@ const signupStudent = async (req, res) => {
         res.status(400);
         throw new Error('Invalid user data');
     }
-};
+});
 
 
 
@@ -102,7 +102,7 @@ const signupStudent = async (req, res) => {
 // @desc     Auth the user & get token
 // @route    GET /api/users/login
 // @access   Public
-const login = async (req, res) => {
+const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email });
 
@@ -127,7 +127,7 @@ const login = async (req, res) => {
         res.status(401);
         throw new Error('Invalid username or password');
     }
-};
+});
 
 
 
