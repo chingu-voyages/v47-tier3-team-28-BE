@@ -7,6 +7,7 @@ const Createmodules = require('./routes/moduleRoute.js');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const { notFound, errorHandler } = require('./middleware/errorHandler')
 
 const courseEnrollmentRoute = require('./routes/courseEnrollmentRoute.js');
 require('dotenv').config(); // Load environment variables from .env file and the root (optional behind the scene)
@@ -21,10 +22,12 @@ app.use('/api/v1', Createmodules)
 app.use('/api/v1', authRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/admin', adminRoutes);
+app.use(notFound);
+app.use(errorHandler);
+
 
 // Course Enrollment
 app.use('/api/v1/enrollment', courseEnrollmentRoute);
-
 
 app.get('/', (req, res) => {
   res.status(200);
