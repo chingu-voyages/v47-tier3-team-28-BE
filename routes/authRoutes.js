@@ -6,6 +6,6 @@ const { signupStudent, signupInstructor, login } = require('../controllers/authC
 
 router.post('/register/instructor', signupInstructor);
 router.post('/register/student', signupStudent);
-router.get('/login', login);
-
+router.post('/login', login);
+// 65bb58a45b0800dd8aedfa0c
 module.exports = router;
