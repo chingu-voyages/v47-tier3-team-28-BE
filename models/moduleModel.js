@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 
 const moduleScheme = new mongoose.Schema(
-
     {
+        course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
         learning_video: {title: { type: String, required: true },
 		url: { type: String, required: true },
 		duration: { type: Number, required: true } },
