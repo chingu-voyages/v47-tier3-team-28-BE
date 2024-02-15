@@ -1,11 +1,12 @@
 
 const CourseModel = require("../models/courseModel");
-const {Module} = require('../models/moduleModel')
+//const {Module} = require('../models/moduleModel');
+const { createModule } = require("./moduleController");
 
 
 const createCourse = async (req,res)=> {
     
-    const {category, description, title, duration } = req.body; //Object deconstructing
+    const {instructor_id, category, description, title, duration ,  module_ids} = req.body; //Object deconstructing
 
     // const existingModules = await Module.find({ _id: { $in: module_ids } });
     //     if (existingModules.length !== module_ids.length) {
@@ -13,13 +14,11 @@ const createCourse = async (req,res)=> {
     //     }
     //creating an instance of the request params based on the course model
     const newCourse =  await new CourseModel({
-        //instructor_id,
-        // module_id : existingModules.map(module => module._id),
+        instructor_id,
         category,
         description,
         title,
         duration,
-
     })
     //.populate('Module')
 
@@ -31,12 +30,36 @@ const createCourse = async (req,res)=> {
         res.status(400).json({ err : "3nfa"})
     }
     //else save the course into database and return a 201 status with a json of how the course instance looks like
-    // await newCourse.save()
+    try {
+        await newCourse.save()
+        // Check if module_ids are provided and create modules if necessary
+        if (module_ids && module_ids.length > 0) {
+            // Iterate over each module ID and create a new module for the course
+            for (const module_id of module_ids) {
+                await createModule({ body: {  ...req.body[module_id] } }, res);
+                // Call your createModule function here passing the course ID and module ID
+                // Example: await createModule(course_id, module_id);
+            }
+        }
+    } catch (error) {
+        console.log(error + "Asem aba");
+    }
+   
 
     res.status(201).json({
     Aba:  newCourse
     })
 }
+
+const getAllCourses = async (req, res) => {
+    try {
+        const courses = await CourseModel.find();
+        res.json(courses);
+    } catch (error) {
+        console.error("Error fetching courses:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
 
 const deleteCourseById = async (req, res) => {
     try {
@@ -55,7 +78,7 @@ const deleteCourseById = async (req, res) => {
     }
 };
 
-const updateCourse2 =async(req,res)=>{
+const updateCourse =async(req,res)=>{
 
     const { course_id } = req.params.id; // Use req.params.course_id
         
@@ -80,4 +103,4 @@ const updateCourse2 =async(req,res)=>{
 }
 
 
-module.exports =  {createCourse }
+module.exports =  {createCourse , getAllCourses, deleteCourseById, updateCourse }
