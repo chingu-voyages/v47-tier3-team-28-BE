@@ -3,14 +3,15 @@ const CourseModel = require('../models/courseModel')
 const InstructorModel = require('../models/instructorModel');
 const studentModel = require('../models/studentModel')
 const generateToken = require('../utils/generateTokens');
-const Role = require = ('../middleware/role')
+const Role = require('../middleware/role');
+const asyncHandler = require('express-async-handler')
 
 
 // @desc     update password
 // @route    GET /api/users/updatePaswword
 // @access   Private
 
-const updatePassword = async (req, res) => {
+const updatePassword = asyncHandler(async (req, res) => {
     const user = await UserModel.findById(req.user._id).select('+password');
     if (!(await user.matchPassword(req.body.currentPassword, user.password))) {
         res.status(404);
@@ -24,13 +25,13 @@ const updatePassword = async (req, res) => {
         _id: updateUserPassword._id,
         token: generateToken(user._id),
     });
-};
+});
 
 // @desc     get user
 // @route    PUT /api/users/:id
 // @access   Private
 
-const getUser = async (req, res) => {
+const getUser = asyncHandler(async (req, res) => {
     const user = await UserModel.findById(req.params.id).select("-password");
     if (user) {
         res.json(user);
@@ -38,12 +39,12 @@ const getUser = async (req, res) => {
         res.status(404);
         throw new Error("User not found");
     }
-};
+});
 
 // @desc     Update user profile
 // @route    PUT /api/updateprofile
 // @access   Private
-const updateUserProfile = async (req, res) => {
+const updateUserProfile = asyncHandler(async (req, res) => {
     const user = await UserModel.findById(req.user._id).select('-password');
 
     if (!user) {
@@ -65,36 +66,36 @@ const updateUserProfile = async (req, res) => {
 
         res.json(updatedUser);
     }
-};
+});
 
 //@desc   get all users list  
 //@route  GET /api/users
 //@access private admin
-const getAllUsers = async (req, res) => {
+const getAllUsers = asyncHandler(async (req, res) => {
     const users = await UserModel.find({}).select('-password');
     res.json(users);
-};
+});
 
 // @desc     Delete a user
 // @route    DELETE /api/users/:id
 // @access   Private/Admin
-const deleteUser = async (req, res) => {
+const deleteUser = asyncHandler(async (req, res) => {
     const user = await UserModel.findById(req.params.id);
     if (user) {
         await user.deleteOne();
         res.json({ message: "User removed" });
     } else {
-        req.status(404);// check
+        req.status(404);
         throw new Error("User not found");
     }
-};
+});
 
 
 // @desc     suspend a user
 // @route    PUT /api/users/:id
 // @access   Private/Admin
 
-const suspendUser = async (req, res) => {
+const suspendUser = asyncHandler(async (req, res) => {
     const userId = req.params.userId;
     const user = await UserModel.findById(userId);
 
@@ -106,12 +107,12 @@ const suspendUser = async (req, res) => {
     await user.save();
 
     res.json({ message: 'User suspended successfully' })
-};
+});
 
 // @desc     suspend a user
 // @route    PUT /api/users/:id
 // @access   Private/Admin
-const reactivateUser = async (req, res) => {
+const reactivateUser = asyncHandler(async (req, res) => {
     const userId = req.params.userId;
     const user = await UserModel.findById(userId);
     if (!user) {
@@ -122,17 +123,17 @@ const reactivateUser = async (req, res) => {
     await user.save();
 
     res.json({ message: 'User reactivated successfully' })
-};
+});
 //@desc   get all users list  
 //@route  GET /api/users
 //@access private admin
-const getAllCourse = async (req, res) => {
+const getAllCourse = asyncHandler(async (req, res) => {
     const courses = await CourseModel.find({});
     if (!courses || courses.length === 0) {
         res.json("no courses at this moment")
     }
     res.json(courses);
-};
+});
 
 
 module.exports = {
