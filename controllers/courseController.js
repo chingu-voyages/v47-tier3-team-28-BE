@@ -3,15 +3,18 @@ const CourseModel = require("../models/courseModel");
 const { createModule } = require("./moduleController");
 
 
+
 const createCourse = async (req, res) => {
 
     const { instructor_id, category, description, title, duration, module_ids } = req.body; //Object deconstructing
+
 
     // const existingModules = await Module.find({ _id: { $in: module_ids } });
     //     if (existingModules.length !== module_ids.length) {
     //         return res.status(400).json({ error: 'Invalid module IDs' });
     //     }
     //creating an instance of the request params based on the course model
+
     const newCourse = await new CourseModel({
         instructor_id,
         category,
