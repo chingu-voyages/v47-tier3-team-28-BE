@@ -22,8 +22,7 @@ app.use('/api/v1', Createmodules)
 app.use('/api/v1', authRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/admin', adminRoutes);
-app.use(notFound);
-app.use(errorHandler);
+
 
 
 // Course Enrollment
@@ -33,7 +32,8 @@ app.get('/', (req, res) => {
   res.status(200);
   res.send("Welcome to root URL of Server");
 });
-
+app.use(notFound);
+app.use(errorHandler);
 app.listen(process.env.port, (error) => {
 
   DbConnection(); // extracted the mongoose connection into the config folder and called the function 

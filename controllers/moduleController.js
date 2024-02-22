@@ -3,9 +3,10 @@ const ModuleModel = require("../models/moduleModel");
 
 const createModule = async (req, res) => {
 
-    const { learning_video, course_exercise, learning_material, quiz_text } = req.body;
+    const { course, learning_video, course_exercise, learning_material, quiz_text } = req.body;
 
     const newModule = new ModuleModel({
+        course,
         learning_video,
         course_exercise,
         learning_material,
